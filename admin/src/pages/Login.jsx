@@ -43,7 +43,7 @@ export default function Login({ setIsAuthenticated }) {
             <div className="card-body p-6">
               {/* Logo */}
               <div className="app-brand justify-content-center mb-6">
-                <a href="/" className="app-brand-link gap-2">
+                <a href={process.env.PUBLIC_URL || "/"} className="app-brand-link gap-2">
                   <span style={{
                     display: "inline-flex", alignItems: "center", justifyContent: "center",
                     width: "40px", height: "40px", borderRadius: "10px",

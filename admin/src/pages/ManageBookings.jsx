@@ -116,10 +116,10 @@ export default function ManageBookings({ setIsAuthenticated, adminName }) {
             <td>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <img
-                  src={b.service?.image ? `${BACKEND}${b.service.image}` : "/assets/img/avatars/1.png"}
+                  src={b.service?.image ? `${BACKEND}${b.service.image}` : process.env.PUBLIC_URL + "/assets/img/avatars/1.png"}
                   alt=""
                   style={{ width: "36px", height: "36px", borderRadius: "6px", objectFit: "cover" }}
-                  onError={(e) => { e.target.src = "/assets/img/avatars/1.png"; }}
+                  onError={(e) => { e.target.src = process.env.PUBLIC_URL + "/assets/img/avatars/1.png"; }}
                 />
                 <div>
                   <p className="mb-0 fw-semibold" style={{ fontSize: "13px" }}>{b.service?.name || "—"}</p>

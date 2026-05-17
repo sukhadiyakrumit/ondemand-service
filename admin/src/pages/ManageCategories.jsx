@@ -113,10 +113,10 @@ export default function ManageCategories({ setIsAuthenticated, adminName }) {
             <td>{idx}</td>
             <td>
               <img
-                src={cat.image ? `${BACKEND}${cat.image}` : "/assets/img/avatars/1.png"}
+                src={cat.image ? `${BACKEND}${cat.image}` : process.env.PUBLIC_URL + "/assets/img/avatars/1.png"}
                 alt={cat.name}
                 style={{ width: "48px", height: "48px", borderRadius: "8px", objectFit: "cover" }}
-                onError={(e) => { e.target.src = "/assets/img/avatars/1.png"; }}
+                onError={(e) => { e.target.src = process.env.PUBLIC_URL + "/assets/img/avatars/1.png"; }}
               />
             </td>
             <td><strong>{cat.name}</strong></td>
@@ -153,10 +153,10 @@ export default function ManageCategories({ setIsAuthenticated, adminName }) {
                     <div className="col-12 text-center">
                       <div style={{ position: "relative", display: "inline-block" }}>
                         <img
-                          src={preview || "/assets/img/avatars/1.png"}
+                          src={preview || process.env.PUBLIC_URL + "/assets/img/avatars/1.png"}
                           alt="Preview"
                           style={{ width: "100px", height: "100px", borderRadius: "10px", objectFit: "cover", border: "2px dashed #4caf50" }}
-                          onError={(e) => { e.target.src = "/assets/img/avatars/1.png"; }}
+                          onError={(e) => { e.target.src = process.env.PUBLIC_URL + "/assets/img/avatars/1.png"; }}
                         />
                         <label htmlFor="cat-img" style={{ position: "absolute", bottom: "-8px", right: "-8px", background: "#4caf50", color: "#fff", borderRadius: "50%", width: "28px", height: "28px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: "14px" }}>
                           <i className="bx bx-camera" />
