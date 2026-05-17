@@ -56,7 +56,11 @@ export default function Home({ isAuthenticated, setIsAuthenticated }) {
     return () => clearInterval(timer);
   }, []);
 
-  const BACKEND = "http://localhost:8000";
+  const BACKEND = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    return path.startsWith("http") ? path : `${BACKEND}${path}`;
+  };
 
   return (
     <>
@@ -189,8 +193,8 @@ export default function Home({ isAuthenticated, setIsAuthenticated }) {
                     <img
                       src={
                         svc.image
-                          ? `${BACKEND}${svc.image}`
-                          : "/images/cleaning.jpg"
+                          ? getImageUrl(svc.image)
+                          : process.env.PUBLIC_URL + "/images/cleaning.jpg"
                       }
                       className="img-responsive"
                       alt={svc.name}
@@ -333,12 +337,12 @@ export default function Home({ isAuthenticated, setIsAuthenticated }) {
                   <img
                     src={
                       cat.image
-                        ? `${BACKEND}${cat.image}`
-                        : "/images/cleaning.jpg"
+                        ? getImageUrl(cat.image)
+                        : process.env.PUBLIC_URL + "/images/cleaning.jpg"
                     }
                     alt={cat.name}
                     style={{ width: "100%", height: "130px", objectFit: "cover" }}
-                    onError={(e) => { e.target.src = "/images/cleaning.jpg"; }}
+                    onError={(e) => { e.target.src = process.env.PUBLIC_URL + "/images/cleaning.jpg"; }}
                   />
                   <div style={{ padding: "14px", textAlign: "center" }}>
                     <h5 style={{ color: "#2c3038", fontSize: "15px", fontWeight: "600" }}>
@@ -369,13 +373,13 @@ export default function Home({ isAuthenticated, setIsAuthenticated }) {
                       className="card-img-top img-responsive"
                       src={
                         fb.user?.profile_image
-                          ? `${BACKEND}${fb.user.profile_image}`
-                          : `/images/testi${(i % 3) + 1}.jpg`
+                          ? getImageUrl(fb.user.profile_image)
+                          : process.env.PUBLIC_URL + `/images/testi${(i % 3) + 1}.jpg`
                       }
                       alt={fb.user?.name}
                       style={{ height: "150px", objectFit: "cover" }}
                       onError={(e) => {
-                        e.target.src = `/images/testi${(i % 3) + 1}.jpg`;
+                        e.target.src = process.env.PUBLIC_URL + `/images/testi${(i % 3) + 1}.jpg`;
                       }}
                     />
                     <div className="card-body">

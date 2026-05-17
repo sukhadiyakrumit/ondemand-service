@@ -13,7 +13,11 @@ export default function Services({ isAuthenticated, setIsAuthenticated }) {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [searchParams] = useSearchParams();
-  const BACKEND = "http://localhost:8000";
+  const BACKEND = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    return path.startsWith("http") ? path : `${BACKEND}${path}`;
+  };
 
   useEffect(() => {
     const catId = searchParams.get("category_id") || "";
@@ -356,10 +360,10 @@ export default function Services({ isAuthenticated, setIsAuthenticated }) {
                     >
                       <Link to={`/service/${svc._id}`}>
                         <img
-                          src={svc.image ? `${BACKEND}${svc.image}` : "/images/cleaning.jpg"}
+                          src={svc.image ? getImageUrl(svc.image) : process.env.PUBLIC_URL + "/images/cleaning.jpg"}
                           alt={svc.name}
                           style={{ width: "100%", height: "170px", objectFit: "cover" }}
-                          onError={(e) => { e.target.src = "/images/cleaning.jpg"; }}
+                          onError={(e) => { e.target.src = process.env.PUBLIC_URL + "/images/cleaning.jpg"; }}
                         />
                       </Link>
                       <div style={{ padding: "16px" }}>

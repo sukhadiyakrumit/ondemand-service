@@ -13,7 +13,11 @@ export default function Profile({ isAuthenticated, setIsAuthenticated }) {
   const [form, setForm] = useState({ name: "", phone: "", address: "" });
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const BACKEND = "http://localhost:8000";
+  const BACKEND = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    return path.startsWith("http") ? path : `${BACKEND}${path}`;
+  };
 
   const fetchProfile = async () => {
     try {
@@ -87,7 +91,7 @@ export default function Profile({ isAuthenticated, setIsAuthenticated }) {
   const avatarSrc = preview
     ? preview
     : profile?.profile_image
-    ? `${BACKEND}${profile.profile_image}`
+    ? getImageUrl(profile.profile_image)
     : null;
 
   return (

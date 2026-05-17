@@ -13,7 +13,11 @@ export default function ServiceDetail({ isAuthenticated, setIsAuthenticated }) {
   const [loading, setLoading] = useState(true);
   const [bookingDatetime, setBookingDatetime] = useState("");
   const [booking, setBooking] = useState(false);
-  const BACKEND = "http://localhost:8000";
+  const BACKEND = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    return path.startsWith("http") ? path : `${BACKEND}${path}`;
+  };
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -104,10 +108,10 @@ export default function ServiceDetail({ isAuthenticated, setIsAuthenticated }) {
             <div>
               <div style={{ background: "#fff", borderRadius: "10px", overflow: "hidden", boxShadow: "0 2px 15px rgba(0,0,0,0.08)", marginBottom: "25px" }}>
                 <img
-                  src={service.image ? `${BACKEND}${service.image}` : "/images/cleaning.jpg"}
+                  src={service.image ? getImageUrl(service.image) : process.env.PUBLIC_URL + "/images/cleaning.jpg"}
                   alt={service.name}
                   style={{ width: "100%", height: "350px", objectFit: "cover" }}
-                  onError={(e) => { e.target.src = "/images/cleaning.jpg"; }}
+                  onError={(e) => { e.target.src = process.env.PUBLIC_URL + "/images/cleaning.jpg"; }}
                 />
                 <div style={{ padding: "25px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "15px" }}>

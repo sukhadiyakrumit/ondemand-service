@@ -21,7 +21,11 @@ export default function MyBookings({ isAuthenticated, setIsAuthenticated }) {
   const [feedbackModal, setFeedbackModal] = useState(null); // {booking_id, service_id}
   const [feedbackData, setFeedbackData] = useState({ rating: 5, feedback: "" });
   const [submittingFeedback, setSubmittingFeedback] = useState(false);
-  const BACKEND = "http://localhost:8000";
+  const BACKEND = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const getImageUrl = (path) => {
+    if (!path) return null;
+    return path.startsWith("http") ? path : `${BACKEND}${path}`;
+  };
 
   const fetchBookings = async () => {
     try {
@@ -290,8 +294,8 @@ export default function MyBookings({ isAuthenticated, setIsAuthenticated }) {
                   <img
                     src={
                       b.service?.image
-                        ? `${BACKEND}${b.service.image}`
-                        : "/images/cleaning.jpg"
+                        ? getImageUrl(b.service.image)
+                        : process.env.PUBLIC_URL + "/images/cleaning.jpg"
                     }
                     alt={b.service?.name}
                     style={{
@@ -302,7 +306,7 @@ export default function MyBookings({ isAuthenticated, setIsAuthenticated }) {
                       flexShrink: 0,
                     }}
                     onError={(e) => {
-                      e.target.src = "/images/cleaning.jpg";
+                      e.target.src = process.env.PUBLIC_URL + "/images/cleaning.jpg";
                     }}
                   />
                   <div style={{ flex: 1 }}>
