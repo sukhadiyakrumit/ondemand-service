@@ -1,12 +1,14 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+
 const checkSession = async () => {
   try {
     const token = Cookies.get("token");
     if (!token) return { isAuth: false, session: null };
 
-    const result = await axios.get("http://localhost:8000/session", {
+    const result = await axios.get(`${API_URL}/session`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const userData = result.data.userData;

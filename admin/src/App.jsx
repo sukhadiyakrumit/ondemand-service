@@ -14,7 +14,7 @@ import ManagePayments from "./pages/ManagePayments";
 import ManageFeedbacks from "./pages/ManageFeedbacks";
 import AdminProfile from "./pages/AdminProfile";
 
-function PageLoader() {
+function PageLoader({ error }) {
   return (
     <div
       style={{
@@ -27,13 +27,38 @@ function PageLoader() {
         gap: "16px",
       }}
     >
-      <div
-        className="spinner-border text-primary"
-        style={{ width: "48px", height: "48px" }}
-      />
-      <p style={{ color: "#697a8d", fontSize: "16px" }}>
-        Loading Admin Panel...
-      </p>
+      {error ? (
+        <>
+          <div className="fa fa-exclamation-circle" style={{ fontSize: "48px", color: "#d32f2f" }} />
+          <p style={{ color: "#697a8d", fontSize: "16px", textAlign: "center", maxWidth: "300px" }}>
+            {error}
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: "8px 16px",
+              background: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontSize: "14px",
+            }}
+          >
+            Retry
+          </button>
+        </>
+      ) : (
+        <>
+          <div
+            className="spinner-border text-primary"
+            style={{ width: "48px", height: "48px" }}
+          />
+          <p style={{ color: "#697a8d", fontSize: "16px" }}>
+            Loading Admin Panel...
+          </p>
+        </>
+      )}
     </div>
   );
 }
@@ -42,9 +67,10 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [adminName, setAdminName] = useState("");
   const [loading, setLoading] = useState(true);
+  const [sessionError, setSessionError] = useState(null);
 
   useEffect(() => {
-    const verify = async () => {
+    const verify = async (retries = 3) => {
       try {
         const result = await checkSession();
         if (result.isAuth) {
@@ -53,16 +79,29 @@ export default function App() {
         } else {
           setIsAuthenticated(false);
         }
-      } catch {
+        setSessionError(null);
+      } catch (error) {
+        console.error("Admin session verification error:", error);
+        
+        // Retry logic for network errors
+        if (retries > 0 && error.message === "Network Error") {
+          console.log(`Retrying session check... (${retries} retries left)`);
+          setTimeout(() => verify(retries - 1), 1500);
+          return;
+        }
+        
         setIsAuthenticated(false);
+        setSessionError(error.message || "Failed to verify admin session");
       } finally {
-        setLoading(false);
+        if (retries === 3 || retries === 0) {
+          setLoading(false);
+        }
       }
     };
     verify();
   }, []);
 
-  if (loading) return <PageLoader />;
+  if (loading) return <PageLoader error={sessionError} />;
 
   // Shared props passed down to every admin page
   const sharedProps = { setIsAuthenticated, adminName };

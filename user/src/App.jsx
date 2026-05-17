@@ -14,7 +14,7 @@ import MyBookings from "./pages/MyBookings";
 import Profile from "./pages/Profile";
 
 // Loader shown while session check runs
-function PageLoader() {
+function PageLoader({ error }) {
   return (
     <div
       style={{
@@ -27,11 +27,36 @@ function PageLoader() {
         gap: "16px",
       }}
     >
-      <span
-        className="fa fa-spinner fa-spin"
-        style={{ fontSize: "48px", color: "#4caf50" }}
-      ></span>
-      <p style={{ color: "#555a64", fontSize: "16px" }}>Loading...</p>
+      {error ? (
+        <>
+          <span className="fa fa-exclamation-circle" style={{ fontSize: "48px", color: "#d32f2f" }}></span>
+          <p style={{ color: "#555a64", fontSize: "16px", textAlign: "center", maxWidth: "300px" }}>
+            {error}
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: "8px 16px",
+              background: "#4caf50",
+              color: "#fff",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontSize: "14px",
+            }}
+          >
+            Retry
+          </button>
+        </>
+      ) : (
+        <>
+          <span
+            className="fa fa-spinner fa-spin"
+            style={{ fontSize: "48px", color: "#4caf50" }}
+          ></span>
+          <p style={{ color: "#555a64", fontSize: "16px" }}>Loading...</p>
+        </>
+      )}
     </div>
   );
 }
@@ -39,22 +64,36 @@ function PageLoader() {
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [sessionError, setSessionError] = useState(null);
 
   useEffect(() => {
-    const verify = async () => {
+    const verify = async (retries = 3) => {
       try {
         const result = await checkSession();
         setIsAuthenticated(result.isAuth || false);
-      } catch {
+        setSessionError(null);
+      } catch (error) {
+        console.error("Session verification error:", error);
+        
+        // Retry logic for network errors
+        if (retries > 0 && error.message === "Network Error") {
+          console.log(`Retrying session check... (${retries} retries left)`);
+          setTimeout(() => verify(retries - 1), 1500);
+          return;
+        }
+        
         setIsAuthenticated(false);
+        setSessionError(error.message || "Failed to verify session");
       } finally {
-        setLoading(false);
+        if (retries === 3 || retries === 0) {
+          setLoading(false);
+        }
       }
     };
     verify();
   }, []);
 
-  if (loading) return <PageLoader />;
+  if (loading) return <PageLoader error={sessionError} />;
 
   const sharedProps = { isAuthenticated, setIsAuthenticated };
 

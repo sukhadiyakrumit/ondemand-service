@@ -9,6 +9,9 @@ node_modules/
 /admin/build
 /user/build
 
+# Uploads (generated at runtime)
+backend/uploads/
+
 # Environment variables
 .env
 .env.local
