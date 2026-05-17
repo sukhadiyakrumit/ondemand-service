@@ -55,16 +55,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-  origin: [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:5173",
-    "http://localhost:5174",
-    process.env.ADMIN_URL || "https://ondemand-admin.onrender.com",
-    process.env.USER_URL || "https://home-service-8ppw.onrender.com",
-  ],
+  origin: true,
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 }));
 
 // ── Static File Serving ───────────────────────────────────────────────────────
