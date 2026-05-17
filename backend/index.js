@@ -61,7 +61,7 @@ app.use(cors({
     "http://localhost:5173",
     "http://localhost:5174",
     process.env.ADMIN_URL || "https://ondemand-admin.onrender.com",
-    process.env.USER_URL || "https://ondemand-user.onrender.com",
+    process.env.USER_URL || "https://home-service-8ppw.onrender.com",
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
