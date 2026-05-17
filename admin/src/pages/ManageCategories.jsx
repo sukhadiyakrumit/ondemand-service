@@ -4,7 +4,11 @@ import AdminLayout from "../common/AdminLayout";
 import DataTable from "../common/DataTable";
 import { getAdminCategories, addCategory, updateCategory, deleteCategory } from "../services/api";
 
-const BACKEND = "http://localhost:8000";
+const BACKEND = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const getImageUrl = (path) => {
+  if (!path) return null;
+  return path.startsWith("http") ? path : `${BACKEND}${path}`;
+};
 const emptyForm = { name: "", description: "", status: "Active" };
 
 export default function ManageCategories({ setIsAuthenticated, adminName }) {
@@ -40,7 +44,7 @@ export default function ManageCategories({ setIsAuthenticated, adminName }) {
     setEditing(cat);
     setForm({ name: cat.name, description: cat.description, status: cat.status });
     setImageFile(null);
-    setPreview(cat.image ? `${BACKEND}${cat.image}` : null);
+    setPreview(getImageUrl(cat.image));
     setModal(true);
   };
 
@@ -113,7 +117,7 @@ export default function ManageCategories({ setIsAuthenticated, adminName }) {
             <td>{idx}</td>
             <td>
               <img
-                src={cat.image ? `${BACKEND}${cat.image}` : process.env.PUBLIC_URL + "/assets/img/avatars/1.png"}
+                src={cat.image ? getImageUrl(cat.image) : process.env.PUBLIC_URL + "/assets/img/avatars/1.png"}
                 alt={cat.name}
                 style={{ width: "48px", height: "48px", borderRadius: "8px", objectFit: "cover" }}
                 onError={(e) => { e.target.src = process.env.PUBLIC_URL + "/assets/img/avatars/1.png"; }}

@@ -4,7 +4,7 @@ import AdminLayout from "../common/AdminLayout";
 import DataTable from "../common/DataTable";
 import { getBookings, updateBooking } from "../services/api";
 
-const BACKEND = "http://localhost:8000";
+const BACKEND = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 export default function ManageBookings({ setIsAuthenticated, adminName }) {
   const [bookings, setBookings] = useState([]);

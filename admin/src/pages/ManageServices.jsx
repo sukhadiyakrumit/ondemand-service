@@ -4,7 +4,11 @@ import AdminLayout from "../common/AdminLayout";
 import DataTable from "../common/DataTable";
 import { getAdminServices, getAdminCategories, addService, updateService, deleteService } from "../services/api";
 
-const BACKEND = "http://localhost:8000";
+const BACKEND = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const getImageUrl = (path) => {
+  if (!path) return null;
+  return path.startsWith("http") ? path : `${BACKEND}${path}`;
+};
 const emptyForm = { name: "", description: "", price: "", category_id: "", status: "Active" };
 
 export default function ManageServices({ setIsAuthenticated, adminName }) {
@@ -42,7 +46,7 @@ export default function ManageServices({ setIsAuthenticated, adminName }) {
     setEditing(svc);
     setForm({ name: svc.name, description: svc.description, price: svc.price, category_id: svc.category_id || svc.category?._id || "", status: svc.status });
     setImageFile(null);
-    setPreview(svc.image ? `${BACKEND}${svc.image}` : null);
+    setPreview(getImageUrl(svc.image));
     setModal(true);
   };
 
@@ -102,7 +106,7 @@ export default function ManageServices({ setIsAuthenticated, adminName }) {
             <td>{idx}</td>
             <td>
               <img
-                src={svc.image ? `${BACKEND}${svc.image}` : process.env.PUBLIC_URL + "/assets/img/avatars/1.png"}
+                src={svc.image ? getImageUrl(svc.image) : process.env.PUBLIC_URL + "/assets/img/avatars/1.png"}
                 alt={svc.name}
                 style={{ width: "48px", height: "48px", borderRadius: "8px", objectFit: "cover" }}
                 onError={(e) => { e.target.src = process.env.PUBLIC_URL + "/assets/img/avatars/1.png"; }}
